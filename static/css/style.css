@@ -1,0 +1,382 @@
+/* ==========================================================================
+   Employee Management System — custom styles
+   Design tokens (colors, spacing, shadows) live at the top as CSS variables
+   so every component below stays consistent and easy to re-theme.
+   ========================================================================== */
+
+:root {
+    --ems-primary: #4f46e5;
+    --ems-primary-dark: #4338ca;
+    --ems-primary-light: #eef2ff;
+    --ems-success: #16a34a;
+    --ems-info: #0891b2;
+    --ems-warning: #d97706;
+    --ems-danger: #dc2626;
+    --ems-text-muted: #6b7280;
+    --ems-border: #e5e7eb;
+    --ems-bg: #f5f6fa;
+    --ems-surface: #ffffff;
+
+    --ems-radius-sm: 0.5rem;
+    --ems-radius-md: 0.75rem;
+    --ems-radius-lg: 1rem;
+
+    --ems-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+    --ems-shadow-md: 0 4px 12px rgba(16, 24, 40, 0.08);
+    --ems-shadow-lg: 0 12px 28px rgba(16, 24, 40, 0.12);
+
+    --ems-transition: all 0.2s ease-in-out;
+}
+
+/* ---------- Base ---------- */
+
+body {
+    background-color: var(--ems-bg);
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1f2937;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.text-muted {
+    color: var(--ems-text-muted) !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+    border-radius: var(--ems-radius-sm);
+    font-weight: 500;
+    padding: 0.5rem 1.1rem;
+    transition: var(--ems-transition);
+}
+
+.btn-sm {
+    padding: 0.3rem 0.65rem;
+    border-radius: 0.4rem;
+}
+
+.btn-primary {
+    background-color: var(--ems-primary);
+    border-color: var(--ems-primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--ems-primary-dark);
+    border-color: var(--ems-primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    color: var(--ems-primary);
+    border-color: var(--ems-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--ems-primary);
+    border-color: var(--ems-primary);
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+    border: 1px solid var(--ems-border);
+    border-radius: var(--ems-radius-md);
+    box-shadow: var(--ems-shadow-sm);
+    transition: var(--ems-transition);
+}
+
+.card-header {
+    border-radius: var(--ems-radius-md) var(--ems-radius-md) 0 0 !important;
+    background-color: var(--ems-surface);
+    border-bottom: 1px solid var(--ems-border);
+    font-weight: 600;
+}
+
+/* Lift effect for interactive/stat cards */
+.card-hover:hover {
+    box-shadow: var(--ems-shadow-lg);
+    transform: translateY(-3px);
+}
+
+/* Dashboard stat cards */
+.stat-card {
+    border: none;
+    border-radius: var(--ems-radius-lg);
+    box-shadow: var(--ems-shadow-md);
+    overflow: hidden;
+    position: relative;
+    transition: var(--ems-transition);
+}
+
+.stat-card:hover {
+    box-shadow: var(--ems-shadow-lg);
+    transform: translateY(-4px);
+}
+
+.stat-card .stat-icon {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: var(--ems-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.stat-card .stat-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.9;
+}
+
+.stat-card--indigo { background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; }
+.stat-card--emerald { background: linear-gradient(135deg, #059669, #10b981); color: #fff; }
+.stat-card--amber { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; }
+.stat-card--sky { background: linear-gradient(135deg, #0891b2, #06b6d4); color: #fff; }
+
+/* ---------- Navbar ---------- */
+
+.navbar {
+    box-shadow: var(--ems-shadow-md);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    font-size: 1.2rem;
+}
+
+.navbar .nav-link {
+    font-weight: 500;
+    border-radius: var(--ems-radius-sm);
+    padding: 0.5rem 0.85rem !important;
+    margin: 0 0.15rem;
+    transition: var(--ems-transition);
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.navbar .form-control {
+    border-radius: var(--ems-radius-sm) 0 0 var(--ems-radius-sm);
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+footer a {
+    color: #d1d5db;
+}
+
+footer a:hover {
+    color: #fff;
+}
+
+/* ---------- Tables ---------- */
+
+.table thead th {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ems-text-muted);
+    border-bottom-width: 1px;
+    background-color: #fafbfc;
+}
+
+.table > :not(caption) > * > * {
+    padding: 0.85rem 0.9rem;
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: var(--ems-primary-light);
+}
+
+/* Circular employee photo used in list/detail views */
+.employee-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--ems-border);
+}
+
+.employee-avatar-lg {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--ems-surface);
+    box-shadow: var(--ems-shadow-md);
+}
+
+/* ---------- Badges ---------- */
+
+.badge {
+    font-weight: 500;
+    padding: 0.4em 0.75em;
+    border-radius: 0.4rem;
+}
+
+/* ---------- Forms ---------- */
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: #374151;
+}
+
+.form-control,
+.form-select {
+    border-radius: var(--ems-radius-sm);
+    border-color: var(--ems-border);
+    padding: 0.55rem 0.85rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--ems-primary);
+    box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: var(--ems-danger);
+}
+
+.input-icon-group {
+    position: relative;
+}
+
+.input-icon-group .input-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.85rem;
+    transform: translateY(-50%);
+    color: var(--ems-text-muted);
+}
+
+.input-icon-group .form-control {
+    padding-left: 2.4rem;
+}
+
+/* Image preview box on Add/Edit Employee form */
+.photo-preview {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px dashed var(--ems-border);
+    background-color: #fafafa;
+}
+
+/* ---------- Search bar ---------- */
+
+.search-bar .form-control {
+    border-radius: var(--ems-radius-sm) 0 0 var(--ems-radius-sm);
+}
+
+.search-bar .btn {
+    border-radius: 0 var(--ems-radius-sm) var(--ems-radius-sm) 0;
+}
+
+/* ---------- Pagination ---------- */
+
+.pagination .page-link {
+    border-radius: var(--ems-radius-sm);
+    margin: 0 0.2rem;
+    color: var(--ems-primary);
+    border: 1px solid var(--ems-border);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--ems-primary);
+    border-color: var(--ems-primary);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #c1c5cc;
+}
+
+/* ---------- Empty state ---------- */
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 1.5rem;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #c7cbd1;
+}
+
+.empty-state h5 {
+    margin-top: 1rem;
+}
+
+/* ---------- Toasts ---------- */
+
+.toast-container {
+    z-index: 1080;
+}
+
+.toast {
+    border: none;
+    border-radius: var(--ems-radius-md);
+    box-shadow: var(--ems-shadow-lg);
+}
+
+/* ---------- Chart containers ---------- */
+
+.chart-wrapper {
+    position: relative;
+    height: 280px;
+}
+
+/* ---------- Misc ---------- */
+
+hr {
+    border-color: var(--ems-border);
+}
+
+.section-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

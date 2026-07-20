@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Employees | Employee Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2 class="fw-bold mb-0">Employees</h2>
+    <a href="{% url 'employees:employee_create' %}" class="btn btn-primary">
+        <i class="bi bi-person-plus me-1"></i> Add Employee
+    </a>
+</div>
+
+<div class="card card-hover mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-sm-9 col-md-6">
+                <input type="text" name="q" value="{{ query }}" class="form-control"
+                       placeholder="Search by name or department...">
+            </div>
+            <div class="col-sm-3 col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
+            {% if query %}
+            <div class="col-md-2">
+                <a href="{% url 'employees:employee_list' %}" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-x-circle"></i> Clear
+                </a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% if query %}
+    <p class="text-muted">Found <strong>{{ total_results }}</strong> result(s) for "<strong>{{ query }}</strong>"</p>
+{% endif %}
+
+<div class="card card-hover">
+    <div class="card-body p-0">
+        {% if page_obj %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Employee ID</th>
+                        <th>Full Name</th>
+                        <th>Department</th>
+                        <th>Designation</th>
+                        <th>Email</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in page_obj %}
+                    <tr>
+                        <td>
+                            {% if employee.profile_photo %}
+                                <img src="{{ employee.profile_photo.url }}
+                                "alt="{{ employee.full_name }}
+                                "class="employee-avatar">
+                            {% else %}
+                                <i class="bi bi-person-circle fs-3 text-secondary"></i>
+                            {% endif %}
+                        </td>
+                        <td>{{ employee.employee_code }}</td>
+                        <td>{{ employee.full_name }}</td>
+                        <td><span class="badge bg-secondary">{{ employee.get_department_display }}</span></td>
+                        <td>{{ employee.designation }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a href="{% url 'employees:employee_detail' employee.pk %}"
+                                class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{% url 'employees:employee_update' employee.pk %}"
+                            class="btn btn-sm btn-outline-warning">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'employees:employee_delete' employee.pk %}"
+                        class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-inbox display-4 d-block mb-2"></i>
+            <h5>No employees found</h5>
+            <p class="text-muted">Add your first employee to get started.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="mt-4" aria-label="Employee pagination">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                <a class="page-link" href="?q={{ query }}&page={{ num }}">{{ num }}</a>
+            </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

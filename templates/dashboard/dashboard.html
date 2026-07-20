@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Employee Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h2 class="fw-bold mb-0">Dashboard</h2>
+        <p class="text-muted mb-0">Welcome back, {{ user.username }}!</p>
+    </div>
+    <a href="{% url 'employees:employee_create' %}" class="btn btn-primary btn-icon">
+        <i class="bi bi-person-plus"></i> Add Employee
+    </a>
+</div>
+
+{% if total_employees == 0 %}
+    <!-- Empty state: no employees in the system yet -->
+    <div class="card">
+        <div class="empty-state">
+            <i class="bi bi-people"></i>
+            <h5 class="fw-bold mt-3">No employees yet</h5>
+            <p class="text-muted">Get started by adding your first employee to the system.</p>
+            <a href="{% url 'employees:employee_create' %}" class="btn btn-primary btn-icon mt-2">
+                <i class="bi bi-person-plus"></i> Add Employee
+            </a>
+        </div>
+    </div>
+{% else %}
+
+    <!-- Statistic cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-lg-3">
+            <div class="card stat-card stat-card--indigo h-100">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="stat-label">Total Employees</div>
+                        <div class="stat-value">{{ total_employees }}</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+            <div class="card stat-card stat-card--emerald h-100">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="stat-label">Total Departments</div>
+                        <div class="stat-value">{{ total_departments }}</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="bi bi-diagram-3-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+            <div class="card stat-card stat-card--amber h-100">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="stat-label">Added This Month</div>
+                        <div class="stat-value">{{ employees_this_month }}</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-plus-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+            <div class="card stat-card stat-card--sky h-100">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="stat-label">Average Salary</div>
+                        <div class="stat-value">&#8377;{{ average_salary }}</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-7">
+            <div class="card card-hover h-100">
+                <div class="card-header">
+                    <span class="section-title"><i class="bi bi-bar-chart-fill text-primary"></i> Employees by Department</span>
+                </div>
+                <div class="card-body">
+                    <div class="chart-wrapper">
+                        <canvas id="departmentBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card card-hover h-100">
+                <div class="card-header">
+                    <span class="section-title"><i class="bi bi-pie-chart-fill text-primary"></i> Department Distribution</span>
+                </div>
+                <div class="card-body">
+                    <div class="chart-wrapper">
+                        <canvas id="departmentPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent employees -->
+    <div class="card card-hover">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span class="section-title"><i class="bi bi-clock-history text-primary"></i> Recently Added Employees</span>
+            <a href="{% url 'employees:employee_list' %}" class="btn btn-sm btn-outline-primary">
+                View All <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="card-body p-0">
+            {% if recent_employees %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Designation</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in recent_employees %}
+                        <tr>
+                            <td>
+                                {% if employee.profile_photo %}
+                                    <img src="{{ employee.profile_photo.url }}" alt="{{ employee.full_name }}"
+                                         class="employee-avatar">
+                                {% else %}
+                                    <i class="bi bi-person-circle fs-3 text-secondary"></i>
+                                {% endif %}
+                            </td>
+                            <td>{{ employee.employee_code }}</td>
+                            <td class="fw-semibold">{{ employee.full_name }}</td>
+                            <td><span class="badge bg-secondary">{{ employee.get_department_display }}</span></td>
+                            <td>{{ employee.designation }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'employees:employee_detail' employee.pk %}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted text-center py-4 mb-0">No employees added yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {{ chart_labels|json_script:"chart-labels-data" }}
+    {{ chart_data|json_script:"chart-data-data" }}
+
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize charts only when chart data is available.
+        const labelsEl = document.getElementById('chart-labels-data');
+        const dataEl = document.getElementById('chart-data-data');
+        if (!labelsEl || !dataEl) {
+            return;
+        }
+
+        const chartLabels = JSON.parse(labelsEl.textContent);
+        const chartData = JSON.parse(dataEl.textContent);
+        const chartColors = ['#4f46e5', '#059669', '#d97706', '#0891b2', '#dc2626', '#7c3aed', '#db2777'];
+
+        const barCtx = document.getElementById('departmentBarChart');
+        if (barCtx) {
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Employees',
+                        data: chartData,
+                        backgroundColor: '#4f46e5',
+                        borderRadius: 6,
+                        maxBarThickness: 48,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { precision: 0 } },
+                    },
+                },
+            });
+        }
+
+        const pieCtx = document.getElementById('departmentPieChart');
+        if (pieCtx) {
+            new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: chartColors,
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                },
+            });
+        }
+    });
+</script>
+{% endblock %}
